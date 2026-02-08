@@ -1,12 +1,12 @@
 'use client'
 
 import { Calendar, dateFnsLocalizer, Views } from 'react-big-calendar'
-import { format, parse, startOfWeek, getDay } from 'date-fns'
-import { enUS } from 'date-fns/locale'
+import { format, parse, startOfWeek, getDay, addDays } from 'date-fns'
+import { ru } from 'date-fns/locale'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import type { Vacation } from '@/lib/db'
 
-const locales = { 'en-US': enUS }
+const locales = { 'ru-RU': ru }
 
 const localizer = dateFnsLocalizer({
   format,
@@ -14,7 +14,10 @@ const localizer = dateFnsLocalizer({
   startOfWeek,
   getDay,
   locales,
-})
+}) as any
+
+// Override default culture
+const culture = 'ru-RU'
 
 interface CalendarProps {
   vacations: Vacation[]
@@ -37,7 +40,8 @@ export function VacationCalendar({ vacations }: CalendarProps) {
   const events = vacations.map((v) => ({
     title: v.employee_name,
     start: new Date(v.start_date),
-    end: new Date(v.end_date),
+    // Add 1 day to end date to include the last day in the calendar
+    end: addDays(new Date(v.end_date), 1),
     resource: v,
   }))
 
@@ -59,6 +63,7 @@ export function VacationCalendar({ vacations }: CalendarProps) {
     <div className="h-[600px]">
       <Calendar
         localizer={localizer}
+        culture={culture}
         events={events}
         startAccessor="start"
         endAccessor="end"
@@ -66,6 +71,14 @@ export function VacationCalendar({ vacations }: CalendarProps) {
         views={[Views.MONTH]}
         defaultView={Views.MONTH}
         eventPropGetter={eventStyleGetter}
+        messages={{
+          next: "Далее",
+          previous: "Назад",
+          today: "Сегодня",
+          month: "Месяц",
+          week: "Неделя",
+          day: "День",
+        }}
       />
     </div>
   )
