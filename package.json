@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "vacations:seed": "tsx --env-file=.env.local scripts/seed-vacations.ts",
+    "vacations:add": "tsx --env-file=.env.local scripts/manual-add-vacations.ts",
+    "vacations:batch": "tsx --env-file=.env.local scripts/manual-add-vacations.ts batch",
+    "vacations:import-pachca": "tsx --env-file=.env.local scripts/import-from-pachca-export.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.95.3",
